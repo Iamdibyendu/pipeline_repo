@@ -1,0 +1,19 @@
+trigger: none
+
+pool: MyAgentpools1
+
+steps : 
+
+- task: TerraformInstaller@1
+  inputs:
+    terraformVersion: 'latest'
+
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    backendServiceArm: 'DibyenduSVC'
+    backendAzureRmStorageAccountName: 'dibstorag'
+    backendAzureRmContainerName: 'dibcontainer'
+    backendAzureRmKey: 'newpipeline1.tfstate'

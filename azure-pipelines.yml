@@ -22,6 +22,7 @@ steps :
     backendAzureRmStorageAccountName: '$(backendstoragename)'
     backendAzureRmContainerName: 'dibcontainer'
     backendAzureRmKey: 'newdib.tfstate'
+    instructions: 'Do you want to run init? Approve to continue.'
 
 - task: TerraformTask@5
   displayName: 'Terraform Validate'
@@ -36,9 +37,3 @@ steps :
     command: 'plan'
     environmentServiceNameAzureRM: 'Dibyo_svp_new'
 
-- task: TerraformTask@5
-  displayName: 'Terraform Apply'
-  inputs:
-    provider: 'azurerm'
-    command: 'apply'
-    environmentServiceNameAzureRM: 'Dibyo_svp_new'

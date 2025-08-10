@@ -19,7 +19,7 @@ parameters:
   - name: runApply
     displayName: '✅ Run Terraform Apply?'
     type: boolean
-    default: false  # Default false for safety
+    default: false  # Keep apply false by default for safety
 
 variables:
   backendstoragename: 'dibstorage'
@@ -30,12 +30,12 @@ pool: MyAgentpools1
 steps:
 
 - task: TerraformInstaller@1
-  displayName: 'Install Latest Terraform'
+  displayName: 'Install Terraform'
   inputs:
     terraformVersion: 'latest'
 
-# ✅ Terraform Init (if selected)
-- ${{ if parameters.runInit }}:
+# ✅ Terraform Init
+- ${{ if eq(parameters.runInit, true) }}:
   - task: TerraformTask@5
     displayName: 'Terraform Init'
     inputs:
@@ -46,16 +46,16 @@ steps:
       backendAzureRmContainerName: 'dibcontainer'
       backendAzureRmKey: 'newdib.tfstate'
 
-# ✅ Terraform Validate (if selected)
-- ${{ if parameters.runValidate }}:
+# ✅ Terraform Validate
+- ${{ if eq(parameters.runValidate, true) }}:
   - task: TerraformTask@5
     displayName: 'Terraform Validate'
     inputs:
       provider: 'azurerm'
       command: 'validate'
 
-# ✅ Terraform Plan (if selected)
-- ${{ if parameters.runPlan }}:
+# ✅ Terraform Plan
+- ${{ if eq(parameters.runPlan, true) }}:
   - task: TerraformTask@5
     displayName: 'Terraform Plan'
     inputs:
@@ -63,8 +63,8 @@ steps:
       command: 'plan'
       environmentServiceNameAzureRM: '$(backendservicename)'
 
-# ✅ Terraform Apply (if selected)
-- ${{ if parameters.runApply }}:
+# ✅ Terraform Apply
+- ${{ if eq(parameters.runApply, true) }}:
   - task: TerraformTask@5
     displayName: 'Terraform Apply'
     inputs:

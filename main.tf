@@ -3,7 +3,7 @@ terraform {
     resource_group_name  = "Dib_backend"          # Can be passed via `-backend-config=`"resource_group_name=<resource group name>"` in the `init` command.
     storage_account_name = "dibstorage"                              # Can be passed via `-backend-config=`"storage_account_name=<storage account name>"` in the `init` command.
     container_name       = "dibcontainer"                               # Can be passed via `-backend-config=`"container_name=<container name>"` in the `init` command.
-    key                  = "newpipeline.tfstate"                # Can be passed via `-backend-config=`"key=<blob key name>"` in the `init` command.
+    key                  = "newpdib.tfstate"                # Can be passed via `-backend-config=`"key=<blob key name>"` in the `init` command.
   }
 
   required_providers {

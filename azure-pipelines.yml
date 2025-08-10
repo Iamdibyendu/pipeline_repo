@@ -8,12 +8,11 @@ steps :
   inputs:
     terraformVersion: 'latest'
 
-
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'init'
-    backendServiceArm: 'DibyenduSVC'
+    backendServiceArm: 'Dibyo_svp_new'
     backendAzureRmStorageAccountName: 'dibstorage'
     backendAzureRmContainerName: 'dibcontainer'
-    backendAzureRmKey: 'newpipeline1.tfstate'
+    backendAzureRmKey: 'newdib.tfstate'

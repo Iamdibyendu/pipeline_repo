@@ -25,49 +25,82 @@ variables:
   backendstoragename: 'dibstorage'
   backendservicename: 'Dibyo_svp_new'
 
-pool: MyAgentpools1
+jobs:
 
-steps:
-
-- task: TerraformInstaller@1
-  displayName: 'Install Terraform'
-  inputs:
-    terraformVersion: 'latest'
-
-# ✅ Terraform Init
+# ✅ Terraform Init Job
 - ${{ if eq(parameters.runInit, true) }}:
-  - task: TerraformTask@5
+  - job: TerraformInit
     displayName: 'Terraform Init'
-    inputs:
-      provider: 'azurerm'
-      command: 'init'
-      backendServiceArm: '$(backendservicename)'
-      backendAzureRmStorageAccountName: '$(backendstoragename)'
-      backendAzureRmContainerName: 'dibcontainer'
-      backendAzureRmKey: 'newdib.tfstate'
+    pool:
+      name: MyAgentpools1
+    steps:
+      - task: TerraformInstaller@1
+        displayName: 'Install Terraform'
+        inputs:
+          terraformVersion: 'latest'
 
-# ✅ Terraform Validate
+      - task: TerraformTask@5
+        displayName: 'Terraform Init'
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          backendServiceArm: '$(backendservicename)'
+          backendAzureRmStorageAccountName: '$(backendstoragename)'
+          backendAzureRmContainerName: 'dibcontainer'
+          backendAzureRmKey: 'newdib.tfstate'
+
+# ✅ Terraform Validate Job
 - ${{ if eq(parameters.runValidate, true) }}:
-  - task: TerraformTask@5
+  - job: TerraformValidate
     displayName: 'Terraform Validate'
-    inputs:
-      provider: 'azurerm'
-      command: 'validate'
+    pool:
+      name: MyAgentpools1
+    steps:
+      - task: TerraformInstaller@1
+        displayName: 'Install Terraform'
+        inputs:
+          terraformVersion: 'latest'
 
-# ✅ Terraform Plan
+      - task: TerraformTask@5
+        displayName: 'Terraform Validate'
+        inputs:
+          provider: 'azurerm'
+          command: 'validate'
+
+# ✅ Terraform Plan Job
 - ${{ if eq(parameters.runPlan, true) }}:
-  - task: TerraformTask@5
+  - job: TerraformPlan
     displayName: 'Terraform Plan'
-    inputs:
-      provider: 'azurerm'
-      command: 'plan'
-      environmentServiceNameAzureRM: '$(backendservicename)'
+    pool:
+      name: MyAgentpools1
+    steps:
+      - task: TerraformInstaller@1
+        displayName: 'Install Terraform'
+        inputs:
+          terraformVersion: 'latest'
 
-# ✅ Terraform Apply
+      - task: TerraformTask@5
+        displayName: 'Terraform Plan'
+        inputs:
+          provider: 'azurerm'
+          command: 'plan'
+          environmentServiceNameAzureRM: '$(backendservicename)'
+
+# ✅ Terraform Apply Job
 - ${{ if eq(parameters.runApply, true) }}:
-  - task: TerraformTask@5
+  - job: TerraformApply
     displayName: 'Terraform Apply'
-    inputs:
-      provider: 'azurerm'
-      command: 'apply'
-      environmentServiceNameAzureRM: '$(backendservicename)'
+    pool:
+      name: MyAgentpools1
+    steps:
+      - task: TerraformInstaller@1
+        displayName: 'Install Terraform'
+        inputs:
+          terraformVersion: 'latest'
+
+      - task: TerraformTask@5
+        displayName: 'Terraform Apply'
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          environmentServiceNameAzureRM: '$(backendservicename)'

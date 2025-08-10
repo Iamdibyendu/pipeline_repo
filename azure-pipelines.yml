@@ -1,39 +1,73 @@
 trigger: none
 
-variables: 
+parameters:
+  - name: runInit
+    displayName: '✅ Run Terraform Init?'
+    type: boolean
+    default: true
+
+  - name: runValidate
+    displayName: '✅ Run Terraform Validate?'
+    type: boolean
+    default: true
+
+  - name: runPlan
+    displayName: '✅ Run Terraform Plan?'
+    type: boolean
+    default: true
+
+  - name: runApply
+    displayName: '✅ Run Terraform Apply?'
+    type: boolean
+    default: false  # Default false for safety
+
+variables:
   backendstoragename: 'dibstorage'
   backendservicename: 'Dibyo_svp_new'
 
 pool: MyAgentpools1
 
-steps : 
+steps:
 
 - task: TerraformInstaller@1
   displayName: 'Install Latest Terraform'
   inputs:
     terraformVersion: 'latest'
 
-- task: TerraformTask@5
-  displayName: 'Terraform init'
-  inputs:
-    provider: 'azurerm'
-    command: 'init'
-    backendServiceArm: '$(backendservicename)'
-    backendAzureRmStorageAccountName: '$(backendstoragename)'
-    backendAzureRmContainerName: 'dibcontainer'
-    backendAzureRmKey: 'newdib.tfstate'
-    instructions: 'Do you want to run init? Approve to continue.'
+# ✅ Terraform Init (if selected)
+- ${{ if parameters.runInit }}:
+  - task: TerraformTask@5
+    displayName: 'Terraform Init'
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      backendServiceArm: '$(backendservicename)'
+      backendAzureRmStorageAccountName: '$(backendstoragename)'
+      backendAzureRmContainerName: 'dibcontainer'
+      backendAzureRmKey: 'newdib.tfstate'
 
-- task: TerraformTask@5
-  displayName: 'Terraform Validate'
-  inputs:
-    provider: 'azurerm'
-    command: 'validate'
+# ✅ Terraform Validate (if selected)
+- ${{ if parameters.runValidate }}:
+  - task: TerraformTask@5
+    displayName: 'Terraform Validate'
+    inputs:
+      provider: 'azurerm'
+      command: 'validate'
 
-- task: TerraformTask@5
-  displayName : 'Terraformm plan'
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    environmentServiceNameAzureRM: 'Dibyo_svp_new'
+# ✅ Terraform Plan (if selected)
+- ${{ if parameters.runPlan }}:
+  - task: TerraformTask@5
+    displayName: 'Terraform Plan'
+    inputs:
+      provider: 'azurerm'
+      command: 'plan'
+      environmentServiceNameAzureRM: '$(backendservicename)'
 
+# ✅ Terraform Apply (if selected)
+- ${{ if parameters.runApply }}:
+  - task: TerraformTask@5
+    displayName: 'Terraform Apply'
+    inputs:
+      provider: 'azurerm'
+      command: 'apply'
+      environmentServiceNameAzureRM: '$(backendservicename)'

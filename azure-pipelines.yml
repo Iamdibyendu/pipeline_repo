@@ -14,6 +14,6 @@ steps :
     provider: 'azurerm'
     command: 'init'
     backendServiceArm: 'DibyenduSVC'
-    backendAzureRmStorageAccountName: 'dibstorag'
+    backendAzureRmStorageAccountName: 'dibstorage'
     backendAzureRmContainerName: 'dibcontainer'
     backendAzureRmKey: 'newpipeline1.tfstate'

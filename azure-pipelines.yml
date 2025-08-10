@@ -35,3 +35,10 @@ steps :
     provider: 'azurerm'
     command: 'plan'
     environmentServiceNameAzureRM: 'Dibyo_svp_new'
+
+- task: TerraformTask@5
+  displayName: 'Terraform Apply'
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    environmentServiceNameAzureRM: 'Dibyo_svp_new'

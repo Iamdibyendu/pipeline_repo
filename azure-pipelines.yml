@@ -1,28 +1,36 @@
 trigger: none
 
+variables: 
+  backendstoragename: 'dibstorage'
+  backendservicename: 'Dibyo_svp_new'
+
 pool: MyAgentpools1
 
 steps : 
 
 - task: TerraformInstaller@1
+  displayName: 'Install Latest Terraform'
   inputs:
     terraformVersion: 'latest'
 
 - task: TerraformTask@5
+  displayName: 'Terraform init'
   inputs:
     provider: 'azurerm'
     command: 'init'
-    backendServiceArm: 'Dibyo_svp_new'
-    backendAzureRmStorageAccountName: 'dibstorage'
+    backendServiceArm: '$(backendservicename)'
+    backendAzureRmStorageAccountName: '$(backendstoragename)'
     backendAzureRmContainerName: 'dibcontainer'
     backendAzureRmKey: 'newdib.tfstate'
 
 - task: TerraformTask@5
+  displayName: 'Terraform Validate'
   inputs:
     provider: 'azurerm'
     command: 'validate'
 
 - task: TerraformTask@5
+  displayName : 'Terraformm plan'
   inputs:
     provider: 'azurerm'
     command: 'plan'
